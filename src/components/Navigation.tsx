@@ -27,8 +27,8 @@ const Navigation = () => {
 
   const navigationItems = [
     { label: 'Features', href: '/#features' },
-    { label: 'Pricing', href: '/#pricing' },
     { label: 'Open Source', href: '/#open-source' },
+    { label: 'Pricing', href: '/#pricing' },
     { label: 'Docs', href: 'https://github.com/Homie-Ai-project/homie_os/tree/main/docs' },
   ];
 
