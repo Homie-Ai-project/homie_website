@@ -22,11 +22,14 @@ export interface SubscriptionResponse {
 export const subscribeToWaitingList = async (email: string): Promise<SubscriptionResponse> => {
   // Try server-side API first (more secure)
   try {
+    console.log('Attempting server-side subscription...');
     return await subscribeToWaitingListServer(email);
   } catch (error) {
     console.warn('Server-side subscription failed, falling back to client-side:', error);
+    console.log('This is expected when deployed on Firebase Hosting without Cloud Functions');
     
     // Fall back to client-side implementation
+    console.log('Switching to client-side Mailchimp integration...');
     return await subscribeToWaitingListClient(email);
   }
 };
@@ -101,7 +104,19 @@ export const subscribeToWaitingListServer = async (email: string): Promise<Subsc
       body: JSON.stringify({ email }),
     });
 
-    const data = await response.json();
+    // Check if the response is HTML (likely a 404 page or index.html)
+    const contentType = response.headers.get('content-type');
+    if (contentType && contentType.includes('text/html')) {
+      throw new Error('API endpoint not available - server-side functions not deployed');
+    }
+
+    let data;
+    try {
+      data = await response.json();
+    } catch (jsonError) {
+      // If JSON parsing fails, it's likely HTML content
+      throw new Error('Invalid response format - expected JSON but received HTML');
+    }
 
     if (!response.ok) {
       return {
@@ -117,10 +132,7 @@ export const subscribeToWaitingListServer = async (email: string): Promise<Subsc
     };
   } catch (error) {
     console.error('Server subscription error:', error);
-    return {
-      success: false,
-      message: 'Network error. Please try again later.',
-      error: 'NETWORK_ERROR',
-    };
+    // Re-throw the error so the main function can fall back to client-side
+    throw error;
   }
 };
