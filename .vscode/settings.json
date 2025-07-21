@@ -1,0 +1,21 @@
+{
+  "editor.formatOnSave": true, // Enable format on save
+  "editor.defaultFormatter": "esbenp.prettier-vscode", // Use Prettier as the default formatter
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit" // Run ESLint fixes on save
+  },
+  // Specify working directories for ESLint
+  "eslint.workingDirectories": [
+    {
+      "directory": "../src",
+      "changeProcessCWD": true
+    }
+  ],
+  // https://mui.com/material-ui/guides/minimizing-bundle-size/#avoid-vs-code-auto-importing-from-barrel-files
+  "typescript.preferences.autoImportSpecifierExcludeRegexes": [
+    "^@mui/[^/]+$"
+  ],
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff"
+  }
+}

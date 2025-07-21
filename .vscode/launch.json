@@ -1,0 +1,35 @@
+{
+    "configurations": [
+        {
+            "name": "Launch Chrome with Vite Preview",
+            "request": "launch",
+            "type": "chrome",
+            "url": "http://localhost:8080",
+            "webRoot": "${workspaceFolder}",
+            "preLaunchTask": "vite-preview",
+            "postDebugTask": "terminate-tasks",
+            "sourceMapPathOverrides": {
+                "webpack:///src/*": "${webRoot}/src/*"
+            },
+            "presentation": {
+                "hidden": false,
+                "group": "browsers",
+                "order": 1
+            }
+        },
+        {
+            "name": "Build and Deploy to Firebase",
+            "type": "node",
+            "request": "launch",
+            "preLaunchTask": "build-and-deploy",
+            "runtimeExecutable": "node",
+            "runtimeArgs": ["--noop"],
+            "skipFiles": ["<node_internals>/**"],
+            "presentation": {
+                "hidden": false,
+                "group": "deploy",
+                "order": 1
+            }
+        },
+    ] 
+}

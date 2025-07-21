@@ -1,0 +1,103 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "kill-previous-server",
+            "type": "shell",
+            "command": "pkill -f 'vite' || true",
+            "presentation": {
+                "reveal": "never",
+                "echo": false
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "vite-preview",
+            "type": "shell",
+            "command": "npm",
+            "args": ["run", "dev"],
+            "isBackground": true,
+            "problemMatcher": {
+                "pattern": {
+                    "regexp": ".",
+                    "file": 1,
+                    "location": 2,
+                    "message": 3
+                },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": ".",
+                    "endsPattern": "Local:.*http://localhost:"
+                }
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "new",
+                "close": false
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "dependsOn": ["kill-previous-server"]
+        },
+        {
+            "label": "terminate-tasks",
+            "type": "shell",
+            "command": "pkill -f 'vite' || true",
+            "presentation": {
+                "reveal": "never",
+                "echo": false,
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "npm",
+            "args": ["run", "build"],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "new",
+                "close": false
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": ["$tsc"]
+        },
+        {
+            "label": "firebase-deploy",
+            "type": "shell",
+            "command": "firebase",
+            "args": ["deploy"],
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new",
+                "close": false
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "dependsOn": ["build"],
+            "problemMatcher": []
+        },
+        {
+            "label": "build-and-deploy",
+            "dependsOrder": "sequence",
+            "dependsOn": ["build", "firebase-deploy"],
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        }
+    ]
+}
