@@ -100,7 +100,7 @@ const Features = () => {
           >
             Homie Ai provides all the tools and infrastructure you need to run large language models
             securely on your own hardware. Choose from our open-source software or get our complete
-            plug-and-play hardware solution with NVIDIA Jetson Nano and pre-installed software.
+            plug-and-play hardware solution with NVIDIA Jetson and pre-installed software.
           </Typography>
         </Box>
 
