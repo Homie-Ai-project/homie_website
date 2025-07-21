@@ -77,7 +77,7 @@ const Hero = () => {
                       mt: 1,
                     }}
                   >
-                    Open Source & Private
+                    Unlimited & Private
                   </Typography>
                 </Typography>
 
@@ -196,7 +196,7 @@ const Hero = () => {
 
               {/* Floating Elements */}
               <Chip
-                label="Private and Unlimited"
+                label="Unlimited & Private"
                 sx={{
                   position: 'absolute',
                   top: -16,
