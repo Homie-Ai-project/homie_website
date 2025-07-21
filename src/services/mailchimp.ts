@@ -20,18 +20,7 @@ export interface SubscriptionResponse {
 }
 
 export const subscribeToWaitingList = async (email: string): Promise<SubscriptionResponse> => {
-  // Try server-side API first (more secure)
-  try {
-    console.log('Attempting server-side subscription...');
-    return await subscribeToWaitingListServer(email);
-  } catch (error) {
-    console.warn('Server-side subscription failed, falling back to client-side:', error);
-    console.log('This is expected when deployed on Firebase Hosting without Cloud Functions');
-    
-    // Fall back to client-side implementation
-    console.log('Switching to client-side Mailchimp integration...');
-    return await subscribeToWaitingListClient(email);
-  }
+  return await subscribeToWaitingListServer(email);
 };
 
 // Client-side implementation (fallback)

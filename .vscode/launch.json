@@ -31,5 +31,19 @@
                 "order": 1
             }
         },
+        {
+            "name": "Deploy Firebase Functions Only",
+            "type": "node",
+            "request": "launch",
+            "preLaunchTask": "firebase-deploy-functions",
+            "runtimeExecutable": "node",
+            "runtimeArgs": ["--noop"],
+            "skipFiles": ["<node_internals>/**"],
+            "presentation": {
+                "hidden": false,
+                "group": "deploy",
+                "order": 2
+            }
+        },
     ] 
 }

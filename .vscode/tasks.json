@@ -98,6 +98,39 @@
                 "panel": "new"
             },
             "problemMatcher": []
+        },
+        {
+            "label": "firebase-deploy-all",
+            "type": "shell",
+            "command": "firebase",
+            "args": ["deploy"],
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new",
+                "close": false
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "dependsOn": ["build"],
+            "problemMatcher": []
+        },
+        {
+            "label": "firebase-deploy-functions",
+            "type": "shell",
+            "command": "firebase",
+            "args": ["deploy", "--only", "functions"],
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new",
+                "close": false
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
         }
     ]
 }
