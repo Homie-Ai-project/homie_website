@@ -8,32 +8,38 @@
  */
 
 import * as functions from "firebase-functions/v1";
+import {defineSecret} from "firebase-functions/params";
 import * as cors from "cors";
 import mailchimp from "@mailchimp/mailchimp_marketing";
 
 // Initialize CORS
 const corsHandler = cors.default({origin: true});
 
-// Mailchimp configuration from Firebase Functions config
-const mailchimpConfig = functions.config().mailchimp;
-const MAILCHIMP_API_KEY = mailchimpConfig.api_key;
-const MAILCHIMP_SERVER_PREFIX = mailchimpConfig.server_prefix;
-const MAILCHIMP_LIST_ID = mailchimpConfig.list_id;
-
-// Initialize Mailchimp
-if (MAILCHIMP_API_KEY && MAILCHIMP_SERVER_PREFIX) {
-  mailchimp.setConfig({
-    apiKey: MAILCHIMP_API_KEY,
-    server: MAILCHIMP_SERVER_PREFIX,
-  });
-}
+// Mailchimp secrets defined via Firebase Secret Manager
+const MAILCHIMP_API_KEY = defineSecret("MAILCHIMP_API_KEY");
+const MAILCHIMP_SERVER_PREFIX = defineSecret("MAILCHIMP_SERVER_PREFIX");
+const MAILCHIMP_LIST_ID = defineSecret("MAILCHIMP_LIST_ID");
 
 // Mailchimp subscription function
 export const subscribe = functions.runWith({
   maxInstances: 10,
+  secrets: [MAILCHIMP_API_KEY, MAILCHIMP_SERVER_PREFIX, MAILCHIMP_LIST_ID],
 }).https.onRequest((request: functions.https.Request, response: functions.Response) => {
   corsHandler(request, response, async () => {
     try {
+      // Resolve secret values at request time
+      const apiKey = MAILCHIMP_API_KEY.value();
+      const serverPrefix = MAILCHIMP_SERVER_PREFIX.value();
+      const listId = MAILCHIMP_LIST_ID.value();
+
+      // Initialize Mailchimp with resolved secrets
+      if (apiKey && serverPrefix) {
+        mailchimp.setConfig({
+          apiKey,
+          server: serverPrefix,
+        });
+      }
+
       // Only allow POST requests
       if (request.method !== "POST") {
         response.status(405).json({
@@ -57,7 +63,7 @@ export const subscribe = functions.runWith({
       }
 
       // Validate environment variables
-      if (!MAILCHIMP_API_KEY || !MAILCHIMP_SERVER_PREFIX || !MAILCHIMP_LIST_ID) {
+      if (!apiKey || !serverPrefix || !listId) {
         functions.logger.error("Mailchimp environment variables not set");
         response.status(500).json({
           success: false,
@@ -68,7 +74,7 @@ export const subscribe = functions.runWith({
       }
 
       // Add the subscriber to the Mailchimp list
-      await mailchimp.lists.addListMember(MAILCHIMP_LIST_ID, {
+      await mailchimp.lists.addListMember(listId, {
         email_address: email,
         status: "subscribed",
         tags: ["waiting-list", "homie-ai-hardware"],
